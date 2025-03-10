@@ -2,9 +2,9 @@
 
 -- go to position program
 
-local homepos = { -339, 83, 667, 3 }
+-- local homepos = { -339, 83, 667, 3 }
 
-print(homepos[1])
+--print(homepos[1])
 
 function turn(str)
 
@@ -141,6 +141,25 @@ function updateCoords(pos)
     
 end
 
+function checkCoords(pos,pos2)
+
+    if pos[1] == pos2[1] and pos[2] == pos2[2] and pos[3] == pos[3] then
+        return true
+    else
+        return false    
+    end
+end
+
+
+function transferCoords(from,to)
+
+    for i = 1,4 do
+        to[i] = from[i]
+    end
+    
+end
+
+
 function rotate(s,e)
     local diff = s - e
     local dir = {}
@@ -260,4 +279,4 @@ function goTo(tPos)
 
 end
 
-goTo(homepos)
+--goTo(homepos)
