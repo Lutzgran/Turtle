@@ -1,20 +1,4 @@
 
-
---local deposite = peripheral.wrap("minecraft:chest_20")
---local extraction = peripheral.wrap("minecraft:chest_19")
-local peripherals = peripheral.getNames()
-local vaults = {}
-local items = {}
-
-
-local vault = peripheral.wrap("create:item_vault_1")
-Test = vault.items(false)
-for k,v in pairs(Test) do
-    print(k,v)
-end
---print(Test[3]["displayName"])
---local vault = peripheral.wrap("create:item_vault_1")
-
 -- cool way to format table data in strings print(("%d x %s in slot %d"):format(item.count, item.name, slot))
 
 
@@ -23,7 +7,9 @@ end
 -- the wrapping makes the vaults into tables
 -- then the wraped vaults are places into the vaults table
 
-function FindVault()
+function FindVault(peripherals)
+
+    local vaults = {}
 
     for k,v in pairs(peripherals) do
     
@@ -33,6 +19,7 @@ function FindVault()
             vaults[name]= v    
          end
     end
+    return vaults
 end
 
 
@@ -40,7 +27,9 @@ end
 -- takes the vaults from the vault table and uses the items function to get a table of content
 -- the table is opened and the displayName index is used to copy the names of the items into the item table
 
-function Finditems()
+function Finditems(vaults)
+
+    local items = {}
 
     for key, vault in pairs(vaults) do   
         local t = vault.items(false)
@@ -48,14 +37,18 @@ function Finditems()
             items[table["displayName"]] = table["name"]
         end
     end
+    return items
 end
 
-function FindChests()
+
+function FindChests(peripherals)
 
     local a = nil
     local b = nil
     local temp_1 = ""
     local temp_2 = ""
+    local deposite = {}
+    local extraction  = {}
 
     for k, v in pairs(peripherals) do
 
@@ -77,10 +70,25 @@ function FindChests()
         deposite = peripheral.wrap(temp_2)
         extraction = peripheral.wrap(temp_1)
     end
+    return deposite, extraction
 end
 
+function FindMonitor(peripherals)
 
-function Pull()
+    local monitor = {}
+
+    for key, value in pairs(peripherals) do
+
+        if string.find(value,"monitor")then
+            monitor = peripheral.wrap(value)          
+            return monitor
+        end
+        
+    end
+    
+end
+
+function Pull(vaults,deposite)
     
     for k,v in pairs(vaults) do
         
@@ -95,8 +103,8 @@ function Pull()
 end
 
 
-function Push(item,numb)
-    local success = true
+function Push(item,numb,items,vaults,extraction)
+    local success = false
     local count = 0
 
     for key, value in pairs(items) do
@@ -110,16 +118,20 @@ function Push(item,numb)
                     print(sent)
                     count = count + sent
                     if count >= numb then
+                        success = true
                         return success 
                     end
                 end
             else
                 for k,v in pairs(vaults) do 
                     print(v.pushItem(peripheral.getName(extraction),value["name"]))
+                    success = true
+                    return success
                 end
             end
         end  
     end 
+    return success
 end
 
 
@@ -130,25 +142,32 @@ function Tablelength(T)
 end
 
 
-function SorageLevel(vault_size)
-
-    local table = {}
-    local max_stacks = 1620
+function SorageLevel(vaults)
+    
+    local max_stacks = 0
     local amount = 0
 
     for k,v in pairs(vaults) do
-        
+        max_stacks = max_stacks + 1620
+        local items = v.items(false)
+        for kk, vv in pairs(items) do
+            amount = amount + vv["count"]  
+        end
     end
-    
+    local numb = tostring(amount/max_stacks)
+    local result = tonumber(string.sub(numb,1,4))
+    return result
 end
 
 
 
 
+--local peripherals = peripheral.getNames()
+--local deposite, extraction = FindChests(peripherals)
+--local vaults = FindVault(peripherals)
+--local items = Finditems(vaults)
 
---FindChests()
---FindVault()
---Finditems()
+--Push("Planks",64,items,vaults,extraction)
 
---Push("Planks",64)
-
+--Pull(vaults,deposite)
+--SorageLevel(vaults)
