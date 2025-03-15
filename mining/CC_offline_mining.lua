@@ -23,11 +23,8 @@ local size = tonumber( args[1] )
 function excavateBetter(size)
     
 
-    if args[1] ~= nil then
-        if not fs.exists('startup') then
-            serialize(shell.run (":/Turtle/mining/CC_offline_mining.lua"),"startup")
-            fs.move("/Turtle/data/startup","/startup")
-        end
+    if args[1] ~= nil then  
+        fs.move("/Turtle/mining/startup","/startup")
         updateCoords(current_pos)
         transferCoords(current_pos,home_pos)
         serialize(home_pos,"home_pos")
@@ -92,7 +89,8 @@ function excavateBetter(size)
     end
 
     goTo(home_pos)
-    fs.delete("/startup")
+    fs.move("/startup","/Turtle/mining/startup")
+    fs.delete('Turtle/data')
     print("Finished mining")
 
 end
