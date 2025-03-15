@@ -106,6 +106,9 @@ end
 function Push(item,numb,items,vaults,extraction)
     local success = false
     local count = 0
+    if numb == nil then
+        numb = 0
+    end
 
     for key, value in pairs(items) do
 
@@ -155,7 +158,7 @@ function SorageLevel(vaults)
         end
     end
     local numb = tostring(amount/max_stacks)
-    local result = tonumber(string.sub(numb,1,4))
+    local result = tonumber(string.sub(numb,1,3))
     return result
 end
 
@@ -171,3 +174,4 @@ end
 
 --Pull(vaults,deposite)
 --SorageLevel(vaults)
+
