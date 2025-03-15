@@ -24,7 +24,7 @@ function excavateBetter(size)
     
 
     if args[1] ~= nil then  
-        fs.move("/Turtle/mining/startup","/startup")
+        fs.move("/Turtle/mining/startup.lua","/startup.lua")
         updateCoords(current_pos)
         transferCoords(current_pos,home_pos)
         serialize(home_pos,"home_pos")
