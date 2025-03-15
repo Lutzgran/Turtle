@@ -47,7 +47,7 @@ function excavateBetter(size)
         goTo(saved_pos)
     end
 
-    while current_pos[2] ~= -60 do
+    while current_pos[2] ~= -57 do
         for i = 1,size do
             for j = 1,size - 1 do
                 dig("f")

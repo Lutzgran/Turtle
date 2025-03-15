@@ -158,9 +158,13 @@ function SorageLevel(vaults)
         end
     end
     local numb = tostring(amount/max_stacks)
-    local result = tonumber(string.sub(numb,1,3))
+    local result = tonumber(string.sub(numb,1,4))
     return result
 end
+
+
+
+
 
 
 
@@ -174,4 +178,3 @@ end
 
 --Pull(vaults,deposite)
 --SorageLevel(vaults)
-

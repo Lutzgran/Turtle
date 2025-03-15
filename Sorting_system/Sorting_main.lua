@@ -1,5 +1,6 @@
 
 require(".Turtle.Sorting_system.Sorting")
+
 local peripherals = peripheral.getNames()
 local monitor = FindMonitor(peripherals)
 local vaults = FindVault(peripherals)
@@ -88,26 +89,69 @@ end
 Buttons()
 LoadingBar()
 
+local id = multishell.launch({}, ":/Turtle/Sorting_system/RednetAuto.lua")
+multishell.setTitle(id, "RednetAuto")
+
+
+if not fs.exists("/startup.lua") then
+    fs.move("/Turtle/Sorting_system/startup.lua","/startup.lua")
+end
+
+
+
 while true do
 
-    local event, button, x, y = os.pullEvent("monitor_touch")
-    local table = {event,button,x,y}
-    local value = ClickButton(table)
-    local str = ""
+    local eventData = {os.pullEvent()}
+    local event = eventData[1]
+    
+    if event == "monitor_touch" then
+    
+        local value = ClickButton(eventData)
+        local str = ""
 
-    if value == "Pull" then
-        write("> ")
-        local msg = read()
+        if value == "Pull" then
+            write("> ")
+            local msg = read()
+            if msg == "repurpose" then
+                fs.move("/startup.lua","/Turtle/Sorting_system/startup.lua")
+                return print("Computer repurpose finished")
+            end
+            local numb = string.match(msg,"%d[%d.,]*")
+            if numb ~= nil then
+                str = string.gsub(msg,numb,"")
+                print(str,numb)
+                numb = tonumber(numb)
+                print(Push(str,numb,items,vaults,extraction))
+                LoadingBar()
+            else
+                print(Push(msg,numb,items,vaults,extraction))
+                LoadingBar()
+            end
+        elseif value == "Push" then
+            print(Pull(vaults,deposite))
+            LoadingBar()
+        end
+        items = Finditems(vaults)
+
+
+    elseif event == "delivery" then
+        Pull(vaults,deposite)
+        LoadingBar()
+
+
+    elseif event == "extraction" then
+        local msg = eventData[2]
         local numb = string.match(msg,"%d[%d.,]*")
+        local str = ""
         if numb ~= nil then
             str = string.gsub(msg,numb,"")
+            print(str,numb)
             numb = tonumber(numb)
+            print(Push(str,numb,items,vaults,extraction))
+            LoadingBar()
+        else
+            print(Push(msg,numb,items,vaults,extraction))
+            LoadingBar()
         end
-        print(Push(str,numb,items,vaults,extraction))
-        LoadingBar()
-    elseif value == "Push" then
-        print(Pull(vaults,deposite))
-        LoadingBar()
     end
-    items = Finditems(vaults)
 end
