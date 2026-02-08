@@ -1,3 +1,1 @@
-shell.setPath("/")
-
-shell.run("/sartup.lua")
+shell.run("/startup.lua")

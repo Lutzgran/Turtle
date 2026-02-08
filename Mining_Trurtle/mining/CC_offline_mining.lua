@@ -21,13 +21,13 @@ local size        = tonumber(args[1])
 
 
 function excavateBetter(size)
-    if #args ~= nil then
+    if args[1] ~= nil then
         fs.move("/Turtle/mining/startup.lua", "/startup.lua")
+        reFuel()
         updateCoords(current_pos)
         transferCoords(current_pos, home_pos)
         serialize(home_pos, "home_pos")
         serialize(size, "size")
-        reFuel()
     else
         saved_pos = unserialize("saved_pos")
         home_pos = unserialize("home_pos")
@@ -88,7 +88,7 @@ function excavateBetter(size)
 
     goTo(home_pos)
     fs.move("/startup", "/Turtle/mining/startup")
-    fs.delete('Turtle/data')
+    fs.delete('/Turtle/data')
     print("Finished mining")
 end
 
