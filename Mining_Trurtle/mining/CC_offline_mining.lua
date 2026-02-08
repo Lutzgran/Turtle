@@ -7,28 +7,26 @@
 -- { 0 = "n", 1 = "e", 2 = "s", 3 = "w" }
 -- { "xPos", "y", "zPos", "dir" }
 
-local GoToPos = require(".Turtle.libraries.goToPos")
+local GoToPos     = require(".Turtle.libraries.goToPos")
 
-local args = {...}
+local args        = { ... }
 
 local current_pos = {}
 local saved_pos   = {}
 local home_pos    = { -339, 83, 667, 3 }
-local homeAmount = 4000
-local size = tonumber( args[1] )
+local homeAmount  = 4000
+local size        = tonumber(args[1])
 
 
 
 
 function excavateBetter(size)
-    
-
-    if args[1] ~= nil then  
-        fs.move("/Turtle/mining/startup.lua","/startup.lua")
+    if #args ~= nil then
+        fs.move("/Turtle/mining/startup.lua", "/startup.lua")
         updateCoords(current_pos)
-        transferCoords(current_pos,home_pos)
-        serialize(home_pos,"home_pos")
-        serialize(size,"size")
+        transferCoords(current_pos, home_pos)
+        serialize(home_pos, "home_pos")
+        serialize(size, "size")
         reFuel()
     else
         saved_pos = unserialize("saved_pos")
@@ -48,8 +46,8 @@ function excavateBetter(size)
     end
 
     while current_pos[2] ~= -57 do
-        for i = 1,size do
-            for j = 1,size - 1 do
+        for i = 1, size do
+            for j = 1, size - 1 do
                 dig("f")
                 go("f")
             end
@@ -65,15 +63,15 @@ function excavateBetter(size)
                     go("f")
                     turn("l")
                 end
-            else   
+            else
                 turn("r")
                 turn("r")
             end
-        end 
+        end
         updateCoords(current_pos)
-        transferCoords(current_pos,saved_pos)
-        serialize(saved_pos,"saved_pos")
-        if inventoryCheck() == true  or fuelCheck(size) == true then
+        transferCoords(current_pos, saved_pos)
+        serialize(saved_pos, "saved_pos")
+        if inventoryCheck() == true or fuelCheck(size) == true then
             if goOfLoad() == false then
                 return print("Needs more storage space!!!")
             end
@@ -89,17 +87,15 @@ function excavateBetter(size)
     end
 
     goTo(home_pos)
-    fs.move("/startup","/Turtle/mining/startup")
+    fs.move("/startup", "/Turtle/mining/startup")
     fs.delete('Turtle/data')
     print("Finished mining")
-
 end
 
-    
-function inventoryCheck()  
+function inventoryCheck()
     local full = true
     local spaces = 0
-    for n = 1,16 do
+    for n = 1, 16 do
         local nCount = turtle.getItemCount(n)
         if nCount ~= 0 then
             spaces = spaces + 1
@@ -111,20 +107,17 @@ function inventoryCheck()
     return full
 end
 
-
-function fuelCheck(size)  
+function fuelCheck(size)
     local notEnough = false
-    local fuelAmount = homeAmount + ((size*size)*5)
-        
+    local fuelAmount = homeAmount + ((size * size) * 5)
+
     if turtle.getFuelLevel() < fuelAmount then
         notEnough = true
     end
     return notEnough
 end
 
-
 function goOfLoad()
-
     local succses
 
     -- ofloading of resourses
@@ -132,7 +125,7 @@ function goOfLoad()
     goTo(home_pos)
     turn("r")
     turn("r")
-    for i = 1,16,1 do
+    for i = 1, 16, 1 do
         turtle.select(i)
         turtle.drop()
     end
@@ -148,9 +141,7 @@ function goOfLoad()
     return succses
 end
 
-
 function reFuel()
-
     local success = false
     local amounnt = 0
     turn("r")
@@ -168,39 +159,38 @@ function reFuel()
     end
     return success
 end
-  
 
 function dig(str)
     local success = false
-    if string.lower(str) == "forward" or string.lower(str)  == "f" then success = turtle.dig()
-    elseif  string.lower(str) == "up" or string.lower(str)  == "u" then success = turtle.digUp()
-    elseif string.lower(str) == "down" or string.lower(str) == "d" then success = turtle.digDown()
+    if string.lower(str) == "forward" or string.lower(str) == "f" then
+        success = turtle.dig()
+    elseif string.lower(str) == "up" or string.lower(str) == "u" then
+        success = turtle.digUp()
+    elseif string.lower(str) == "down" or string.lower(str) == "d" then
+        success = turtle.digDown()
     end
     return success
 end
-
 
 function serialize(data, name)
     if not fs.exists('Turtle/data') then
         fs.makeDir('Turtle/data')
     end
-    fs.delete('/Turtle/data/'..name)
-    local file = fs.open('/Turtle/data/'..name, 'w')
+    fs.delete('/Turtle/data/' .. name)
+    local file = fs.open('/Turtle/data/' .. name, 'w')
     file.write(textutils.serialize(data))
     file.close()
 end
 
-
 function unserialize(name)
-    if fs.exists('/Turtle/data/'..name) then
-        local file = fs.open('/Turtle/data/'..name, 'r')
+    if fs.exists('/Turtle/data/' .. name) then
+        local file = fs.open('/Turtle/data/' .. name, 'r')
         data = file.readAll()
         file.close()
         data = textutils.unserialize(data)
     end
     return data
 end
-
 
 function go(str)
     local success = false
@@ -220,7 +210,6 @@ function go(str)
             term.write("I'm stuck!")
             sleep(5)
             os.reboot()
-            
         end
     end
     if string.lower(str) == "forward" or string.lower(str) == "f" then
@@ -239,17 +228,15 @@ function go(str)
             term.write("I'm stuck!")
             sleep(5)
             os.reboot()
-            
         end
     end
     return success
 end
 
-
 if args[1] == nil then
     size = unserialize("size")
 else
-    size = tonumber( args[1] )
+    size = tonumber(args[1])
 end
 
 

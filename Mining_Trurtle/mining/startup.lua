@@ -1,3 +1,3 @@
-local GoToPos = require("Turtle.mining.CC_offline_mining")
+shell.setPath("/")
 
-shell.run(excavateBetter())
+shell.run("/sartup.lua")
