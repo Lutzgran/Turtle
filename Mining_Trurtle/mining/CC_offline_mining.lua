@@ -16,7 +16,7 @@ local args        = { ... }
 
 local current_pos = {}
 local saved_pos   = {}
-local home_pos    = { -339, 83, 667, 3 }
+local home_pos    = {}
 local homeAmount  = 4000
 local size        = tonumber(args[1])
 
@@ -146,12 +146,13 @@ end
 
 function reFuel()
     local success = false
-    local amounnt = 0
+    local current = 0
+    local amount  = 0
     turn("r")
     turtle.select(1)
-    amounnt = turtle.getItemCount()
-    amount = amounnt - 64
-    turtle.suck(math.abs(amounnt))
+    current = turtle.getItemCount()
+    amount = current - 64
+    turtle.suck(math.abs(amount))
     turtle.refuel()
     turn("l")
 
