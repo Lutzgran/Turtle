@@ -1,0 +1,4 @@
+
+-- place in data folder for it to work and name startup
+
+shell.run(mining_program)
