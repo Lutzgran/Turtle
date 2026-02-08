@@ -1,5 +1,3 @@
-
-
 -- go to position program
 
 -- local homepos = { -339, 83, 667, 3 }
@@ -7,7 +5,6 @@
 --print(homepos[1])
 
 function turn(str)
-
     if string.lower(str) == "right" or string.lower(str) == "r" then
         turtle.turnRight()
     end
@@ -34,7 +31,6 @@ function go(str)
             term.write("I'm stuck!")
             sleep(5)
             os.reboot()
-            
         end
     end
     if string.lower(str) == "forward" or string.lower(str) == "f" then
@@ -53,14 +49,12 @@ function go(str)
             term.write("I'm stuck!")
             sleep(5)
             os.reboot()
-            
         end
     end
     return success
 end
 
 function findDir()
-
     local coords = {}
     local currentPos = {}
     local b = false
@@ -76,7 +70,7 @@ function findDir()
             b = true
             go("forward")
         else
-            print( "Please remove block in fornt or back of me!!!")
+            print("Please remove block in fornt or back of me!!!")
             sleep(5)
             os.reboot()
         end
@@ -84,25 +78,25 @@ function findDir()
 
     probe()
 
-    if coords[1] ~= currentPos[1] then 
+    if coords[1] ~= currentPos[1] then
         if coords[1] > currentPos[1] then
             if b then
                 dir = 3
-            else 
+            else
                 dir = 1
             end
         else
-            if b then 
+            if b then
                 dir = 1
             else
                 dir = 3
             end
         end
-    else 
+    else
         if coords[3] > currentPos[3] then
             if b then
                 dir = 0
-            else 
+            else
                 dir = 2
             end
         else
@@ -117,64 +111,58 @@ function findDir()
 end
 
 function updateCoordsLocal(pos)
+    local x, y, z = gps.locate()
 
-    local x , y , z = gps.locate()
-
-    pos[1]=x
-    pos[2]=y
-    pos[3]=z
-
-    return pos
-    
-end 
-
-function updateCoords(pos)
-
-    local x , y , z = gps.locate()
-
-    pos[1]=x
-    pos[2]=y
-    pos[3]=z
-    pos[4]= findDir()
+    pos[1] = x
+    pos[2] = y
+    pos[3] = z
 
     return pos
-    
 end
 
-function checkCoords(pos,pos2)
+function updateCoords(pos)
+    local x, y, z = gps.locate()
 
+    pos[1] = x
+    pos[2] = y
+    pos[3] = z
+    pos[4] = findDir()
+
+    return pos
+end
+
+function checkCoords(pos, pos2)
     if pos[1] == pos2[1] and pos[2] == pos2[2] and pos[3] == pos[3] then
         return true
     else
-        return false    
+        return false
     end
 end
 
-
-function transferCoords(from,to)
-
-    for i = 1,4 do
+function transferCoords(from, to)
+    for i = 1, 4 do
         to[i] = from[i]
     end
-    
 end
 
-
-function rotate(s,e)
+function rotate(s, e)
     local diff = s - e
     local dir = {}
     if (math.abs(diff) > 0) then
-        if     diff == -3 or diff ==  1 then dir = {1, "l"}
-        elseif diff ==  3 or diff == -1 then dir = {1, "r"}
-        else dir = {2, "r"} end
-        for i = 1,dir[1] do
+        if diff == -3 or diff == 1 then
+            dir = { 1, "l" }
+        elseif diff == 3 or diff == -1 then
+            dir = { 1, "r" }
+        else
+            dir = { 2, "r" }
+        end
+        for i = 1, dir[1] do
             turn(dir[2])
         end
     end
 end
 
 function findDiff(axis)
-
     if cPos[axis] <= 0 then
         if Pos[axis] <= 0 then
             diff = math.abs(cPos[axis] - Pos[axis])
@@ -190,11 +178,9 @@ function findDiff(axis)
     end
 
     return diff
-
 end
 
 function goTo(tPos)
-
     Pos = tPos
     cPos = {}
 
@@ -206,77 +192,73 @@ function goTo(tPos)
     local diff
 
     if cPos[2] < tPos[2] then
-        
         diff = findDiff(2)
 
-        for i = 1,diff,1 do
+        for i = 1, diff, 1 do
             go("u")
         end
 
         if cPos[1] < tPos[1] then
-            rotate(s_dir,1)
+            rotate(s_dir, 1)
             dir = 1
         else
-            rotate(s_dir,3)
+            rotate(s_dir, 3)
             dir = 3
         end
-        
+
         diff = findDiff(1)
-        for i = 1,diff,1 do
+        for i = 1, diff, 1 do
             go("f")
         end
 
         if cPos[3] < tPos[3] then
-            rotate(dir,2)
+            rotate(dir, 2)
             dir = 2
         else
-            rotate(dir,0)
+            rotate(dir, 0)
             dir = 0
         end
 
         diff = findDiff(3)
-        for i = 1,diff,1 do
+        for i = 1, diff, 1 do
             go("f")
         end
-        rotate(dir,e_dir)
+        rotate(dir, e_dir)
     else
         if cPos[1] < tPos[1] then
-            rotate(s_dir,1)
+            rotate(s_dir, 1)
             dir = 1
         else
-            rotate(s_dir,3)
+            rotate(s_dir, 3)
             dir = 3
         end
-        
+
         diff = findDiff(1)
-        for i = 1,diff,1 do
+        for i = 1, diff, 1 do
             go("f")
         end
 
         if cPos[3] < tPos[3] then
-            rotate(dir,2)
+            rotate(dir, 2)
             dir = 2
         else
-            rotate(dir,0)
+            rotate(dir, 0)
             dir = 0
         end
 
         diff = findDiff(3)
-        for i = 1,diff,1 do
+        for i = 1, diff, 1 do
             go("f")
         end
 
         diff = findDiff(2)
 
-        for i = 1,diff,1 do
+        for i = 1, diff, 1 do
             go("d")
         end
 
-        rotate(dir,e_dir)
-
+        rotate(dir, e_dir)
     end
-
-
 end
 
 --goTo(homepos)
