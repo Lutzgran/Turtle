@@ -1,3 +1,7 @@
 
 
+make mining turtle have a disstres signal over red net with its coords if it gets stuck
+
+
+
 so the thing need to refuel befor it updates its coordinates bruuuuuuh¨
